@@ -14,16 +14,16 @@
 */
 
 --Setup environment
-CREATE DATABASE IF NOT EXISTS frosty_friday;
-CREATE SCHEMA IF NOT EXISTS frosty;
-DROP SCHEMA IF EXISTS public;
+create database if not exists frosty_friday;
+create schema if not exists frosty;
+drop schema if exists public;
 
---Create Test Table
-CREATE OR REPLACE TABLE FF_week_5 (start_int int);
-INSERT INTO FF_week_5 VALUES (2),(42),(87);
+--create test table
+create or replace table ff_week_5 (start_int int);
+insert into ff_week_5 values (2),(42),(87);
 
---Create Function
-CREATE OR REPLACE FUNCTION timesthree (start_int int)
+--create function
+create or replace function timesthree (start_int int)
 returns integer
 language python
 runtime_version = '3.11'
@@ -35,7 +35,7 @@ def timesthree_py(start_int):
 $$;
 
 --Test Function
-SELECT start_int, 
+select start_int, 
        timesthree(start_int) as timesthree
-FROM FF_week_5
+  from ff_week_5
 

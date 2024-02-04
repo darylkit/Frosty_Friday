@@ -7,94 +7,94 @@
 */
 
 --Setup environment
-CREATE DATABASE IF NOT EXISTS frosty_friday;
-CREATE SCHEMA IF NOT EXISTS frosty;
-DROP SCHEMA IF EXISTS public;
+create database if not exists frosty_friday;
+create schema if not exists frosty;
+drop schema if exists public;
 
---Create Internal Stage
-CREATE STAGE IF NOT EXISTS internal_stage 
-	DIRECTORY = ( ENABLE = true );
+--create internal stage
+create stage if not exists internal_stage 
+	directory = ( enable = true );
 
-LIST @internal_stage;
+list @internal_stage;
 
--- Query the INFER_SCHEMA function.
-SELECT *
-  FROM TABLE(
-    INFER_SCHEMA(
-      LOCATION=>'@FROSTY_FRIDAY.FROSTY.INTERNAL_STAGE/employees.parquet'
+-- query the infer_schema function.
+select *
+  from table(
+    infer_schema(
+      location=>'@FROSTY_FRIDAY.FROSTY.INTERNAL_STAGE/employees.parquet'
       , FILE_FORMAT=>'frosty_parquet'
       , IGNORE_CASE=>TRUE
       )
     );
     
 --Create table
-CREATE OR REPLACE TABLE frosty_friday.frosty.employees 
-(   employee_id NUMBER , 
-    first_name VARCHAR , 
-    last_name VARCHAR , 
-    email VARCHAR , 
-    street_num NUMBER , 
-    street_name VARCHAR , 
-    city VARCHAR , 
-    postcode VARCHAR , 
-    country VARCHAR , 
-    country_code VARCHAR , 
-    time_zone VARCHAR , 
-    payroll_iban VARCHAR , 
-    dept VARCHAR , 
-    job_title VARCHAR , 
-    education VARCHAR , 
-    title VARCHAR , 
-    suffix VARCHAR 
+create or replace table frosty_friday.frosty.employees 
+(   employee_id number , 
+    first_name varchar , 
+    last_name varchar , 
+    email varchar , 
+    street_num number , 
+    street_name varchar , 
+    city varchar , 
+    postcode varchar , 
+    country varchar , 
+    country_code varchar , 
+    time_zone varchar , 
+    payroll_iban varchar , 
+    dept varchar , 
+    job_title varchar , 
+    education varchar , 
+    title varchar , 
+    suffix varchar 
 ); 
 
---Create File Format
-CREATE TEMP FILE FORMAT frosty_friday.frosty.frosty_parquet
-	TYPE=PARQUET
-    REPLACE_INVALID_CHARACTERS=TRUE
-    BINARY_AS_TEXT=FALSE; 
+--create file format
+create temp file format frosty_friday.frosty.frosty_parquet
+	type=parquet
+    replace_invalid_characters=true
+    binary_as_text=false; 
 
---Load into employees table
-COPY INTO frosty_friday.frosty.employees
-FROM 
-(   SELECT $1:employee_id::NUMBER, 
-           $1:first_name::VARCHAR, 
-           $1:last_name::VARCHAR, 
-           $1:email::VARCHAR, 
-           $1:street_num::NUMBER, 
-           $1:street_name::VARCHAR, 
-           $1:city::VARCHAR, 
-           $1:postcode::VARCHAR, 
-           $1:country::VARCHAR, 
-           $1:country_code::VARCHAR, 
-           $1:time_zone::VARCHAR, 
-           $1:payroll_iban::VARCHAR, 
-           $1:dept::VARCHAR, 
-           $1:job_title::VARCHAR, 
-           $1:education::VARCHAR, 
-           $1:title::VARCHAR, 
-           $1:suffix::VARCHAR
-	FROM '@FROSTY_FRIDAY.FROSTY.INTERNAL_STAGE/employees.parquet') 
+--load into employees table
+copy into frosty_friday.frosty.employees
+from 
+(   select $1:employee_id::number, 
+           $1:first_name::varchar, 
+           $1:last_name::varchar, 
+           $1:email::varchar, 
+           $1:street_num::number, 
+           $1:street_name::varchar, 
+           $1:city::varchar, 
+           $1:postcode::varchar, 
+           $1:country::varchar, 
+           $1:country_code::varchar, 
+           $1:time_zone::varchar, 
+           $1:payroll_iban::varchar, 
+           $1:dept::varchar, 
+           $1:job_title::varchar, 
+           $1:education::varchar, 
+           $1:title::varchar, 
+           $1:suffix::varchar
+	from '@FROSTY_FRIDAY.FROSTY.INTERNAL_STAGE/employees.parquet') 
 FILE_FORMAT = frosty_friday.frosty.frosty_parquet;
 
---Create view to only show dept and job_title in our stream
-CREATE OR REPLACE VIEW vw_employees AS 
-SELECT employee_id,
+--create view to only show dept and job_title in our stream
+create or replace view vw_employees as 
+select employee_id,
        dept,
        job_title
-FROM frosty_friday.frosty.employees;
+from frosty_friday.frosty.employees;
 
-SELECT * FROM vw_employees;
+select * from vw_employees;
 
---Create stream
-CREATE OR REPLACE STREAM employeesStream ON VIEW frosty_friday.frosty.vw_employees;
+--create stream
+create or replace stream employeesstream on view frosty_friday.frosty.vw_employees;
 
---Test Update
-UPDATE FROSTY_FRIDAY.FROSTY.employees SET COUNTRY = 'Japan' WHERE EMPLOYEE_ID = 8;
-UPDATE FROSTY_FRIDAY.FROSTY.employees SET LAST_NAME = 'Forester' WHERE EMPLOYEE_ID = 22;
-UPDATE FROSTY_FRIDAY.FROSTY.employees SET DEPT = 'Marketing' WHERE EMPLOYEE_ID = 25;
-UPDATE FROSTY_FRIDAY.FROSTY.employees SET TITLE = 'Ms' WHERE EMPLOYEE_ID = 32;
-UPDATE FROSTY_FRIDAY.FROSTY.employees SET JOB_TITLE = 'Senior Financial Analyst' WHERE EMPLOYEE_ID = 68;
+--test update
+update frosty_friday.frosty.employees set country = 'Japan' where employee_id = 8;
+update frosty_friday.frosty.employees set last_name = 'Forester' where employee_id = 22;
+update frosty_friday.frosty.employees set dept = 'Marketing' where employee_id = 25;
+update frosty_friday.frosty.employees set title = 'Ms' where employee_id = 32;
+update frosty_friday.frosty.employees set job_title = 'Senior Financial Analyst' where employee_id = 68;
 
 --Check Stream Values
 SELECT * FROM frosty_friday.frosty.employeesStream;

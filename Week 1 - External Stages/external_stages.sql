@@ -8,19 +8,19 @@
 */
 
 --Setup environment
-CREATE DATABASE IF NOT EXISTS frosty_friday;
-CREATE SCHEMA IF NOT EXISTS frosty;
-DROP SCHEMA IF EXISTS public;
+create database if not exists frosty_friday;
+create schema if not exists frosty;
+drop schema if exists public;
 
---Create S3 External Stage
-CREATE OR REPLACE STAGE data_dumps 
+--create s3 external stage
+create or replace stage data_dumps 
 	URL = 's3://frostyfridaychallenges/challenge_1/' 
-	DIRECTORY = ( ENABLE = true );
+	directory = ( enable = true );
 
-LIST @data_dumps;
+list @data_dumps;
 
---Create Table
-CREATE TABLE IF NOT EXISTS data_dump AS 
-SELECT $1 AS val FROM @data_dumps;
+--create table
+create table if not exists data_dump as 
+select $1 as val from @data_dumps;
 
-SELECT * FROM data_dump;
+select * from data_dump;

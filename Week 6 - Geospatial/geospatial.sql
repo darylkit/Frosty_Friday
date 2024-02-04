@@ -15,108 +15,104 @@
     ‘part 12’ of the Argyll and Bute constituency.
 */
 --Setup environment
-CREATE DATABASE IF NOT EXISTS frosty_friday;
-CREATE SCHEMA IF NOT EXISTS frosty;
-DROP SCHEMA IF EXISTS public;
+create database if not exists frosty_friday;
+create schema if not exists frosty;
+drop schema if exists public;
 
-ALTER SESSION SET geography_output_format = 'WKT';
+alter session set geography_output_format = 'WKT';
 
-CREATE OR REPLACE FILE FORMAT geospatial_csv
-   TYPE = 'CSV'
-   FIELD_DELIMITER = ','
-   SKIP_HEADER = 1
-   FIELD_OPTIONALLY_ENCLOSED_BY = '"';
+create or replace file format geospatial_csv
+   type = 'CSV'
+   field_delimiter = ','
+   skip_header = 1
+   field_optionally_enclosed_by = '"';
 
-CREATE OR REPLACE TABLE nations_and_regions AS
+create or replace table nations_and_regions as
 select $1 as nation_or_region_name,
        $2 as type,
        $3 as sequence_num,
        $4::real as longitude,
        $5::real as latitude,
        $6::int as part,
-       ST_MAKEPOINT(longitude,latitude) as coordinates
-from @internal_stage/nations_and_regions.csv
-(file_format => 'geospatial_csv');
+       st_makepoint(longitude,latitude) as coordinates
+  from @internal_stage/nations_and_regions.csv
+       (file_format => 'geospatial_csv');
 
-CREATE OR REPLACE TABLE westminster_constituency_points AS 
+create or replace table westminster_constituency_points as 
 select $1 as constituency, 
        $2 as sequence_num,
        $3::varchar as longitude,
        $4::varchar as latitude, 
        $5::int as part,
-       ST_MAKEPOINT(longitude,latitude) as coordinates
-from @internal_stage/westminster_constituency_points.csv
-(file_format => 'geospatial_csv');
+       st_makepoint(longitude,latitude) as coordinates
+  from @internal_stage/westminster_constituency_points.csv
+       (file_format => 'geospatial_csv');
 
-CREATE OR REPLACE VIEW vw_nations_and_regions AS
-WITH collect AS (
-    WITH starting_point AS (
-        SELECT 
-            nation_or_region_name,
-            type,
-            part,
-            coordinates AS starting_coordinates
-        FROM nations_and_regions
-        WHERE sequence_num = 0),
-    coordinates AS (
-        SELECT 
-            nr.nation_or_region_name,
-            nr.type,
-            nr.part,
-            st_collect(nr.coordinates) as coordinates
-        FROM nations_and_regions nr
-        GROUP BY nation_or_region_name, type, part)
-    select nr.nation_or_region_name,
-            nr.type,
-            nr.part,
-            st_makepolygon(st_makeline(starting_coordinates, coordinates)) AS polygon
-    FROM coordinates nr
-    INNER JOIN starting_point sp
-    ON sp.nation_or_region_name = nr.nation_or_region_name
-    AND nr.type = sp.type
-    AND nr.part = sp.part
-    ORDER BY nr.part)
-SELECT nation_or_region_name,
-       ST_COLLECT(polygon) as polygon
-FROM collect
-GROUP BY nation_or_region_name;
+create or replace view vw_nations_and_regions as
+with collect as (
+    with starting_point as (
+        select nation_or_region_name,
+               type,
+               part,
+               coordinates as starting_coordinates
+          from nations_and_regions
+         where sequence_num = 0),
+coordinates as (
+        select nr.nation_or_region_name,
+               nr.type,
+               nr.part,
+               st_collect(nr.coordinates) as coordinates
+          from nations_and_regions nr
+         group by nation_or_region_name, type, part)
+        select nr.nation_or_region_name,
+               nr.type,
+               nr.part,
+               st_makepolygon(st_makeline(starting_coordinates, coordinates)) as polygon
+          from coordinates nr
+         inner join starting_point sp
+            on sp.nation_or_region_name = nr.nation_or_region_name
+           and nr.type = sp.type
+           and nr.part = sp.part
+         order by nr.part)
+select nation_or_region_name,
+       st_collect(polygon) as polygon
+  from collect
+ group by nation_or_region_name;
 
-CREATE OR REPLACE VIEW vw_westminster_constituency_points AS
-WITH collect AS (
-    WITH starting_point AS (
-        SELECT 
-            constituency,
-            part,
-            coordinates AS starting_coordinates
-        FROM westminster_constituency_points
-        WHERE sequence_num = 0),
-    coordinates AS (
-        SELECT 
-            constituency,
-            part,
-            st_collect(coordinates) as coordinates
-        FROM westminster_constituency_points 
-        GROUP BY constituency, part)
+create or replace view vw_westminster_constituency_points as
+with collect as (
+    with starting_point as (
+        select constituency,
+               part,
+               coordinates as starting_coordinates
+          from westminster_constituency_points
+         where sequence_num = 0),
+    coordinates as (
+        select constituency,
+               part,
+               st_collect(coordinates) as coordinates
+          from westminster_constituency_points 
+         group by constituency, part)
     select nr.constituency,
-            nr.part,
-            st_makepolygon(st_makeline(starting_coordinates, coordinates)) AS polygon
-    FROM coordinates nr
-    INNER JOIN starting_point sp
-    ON sp.constituency = nr.constituency
-    AND nr.part = sp.part
-    ORDER BY nr.part)
-SELECT constituency,
-       ST_COLLECT(polygon) as polygon
-FROM collect
-GROUP BY constituency;
+           nr.part,
+           st_makepolygon(st_makeline(starting_coordinates, coordinates)) as polygon
+      from coordinates nr
+     inner join starting_point sp
+        on sp.constituency = nr.constituency
+       and nr.part = sp.part
+     order by nr.part)
+select constituency,
+       st_collect(polygon) as polygon
+  from collect
+ group by constituency;
 
 
-SELECT nation_or_region_name as NATION_OR_REGION, 
-       COUNT(wc.constituency) as INTERSECTING_CONSTITUENCIES
-FROM vw_nations_and_regions nr
-INNER JOIN vw_westminster_constituency_points wc
-ON ST_INTERSECTS(wc.polygon, nr.polygon)
-GROUP BY nation_or_region_name
-ORDER BY 2 DESC;
+select nation_or_region_name as nation_or_region, 
+       count(wc.constituency) as intersecting_constituencies
+  from vw_nations_and_regions nr
+ inner join vw_westminster_constituency_points wc
+    on st_intersects(wc.polygon, nr.polygon)
+ group by nation_or_region_name
+ order by 2 desc;
 
 

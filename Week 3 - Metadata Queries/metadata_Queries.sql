@@ -10,28 +10,28 @@
 */
 
 --Setup environment
-CREATE DATABASE IF NOT EXISTS frosty_friday;
-CREATE SCHEMA IF NOT EXISTS frosty;
-DROP SCHEMA IF EXISTS public;
+create database if not exists frosty_friday;
+create schema if not exists frosty;
+drop schema if exists public;
 
---Create S3 External Stage
-CREATE OR REPLACE STAGE data_dumps 
-	URL = 's3://frostyfridaychallenges/challenge_3/' 
-	DIRECTORY = ( ENABLE = true );
+--create s3 external stage
+create or replace stage data_dumps 
+	url = 's3://frostyfridaychallenges/challenge_3/' 
+	directory = ( enable = true );
 
-CREATE TABLE IF NOT EXISTS stage_table AS 
---Retrieve file names and row count. Deduct 1 for the header.
-SELECT METADATA$FILENAME as filename, 
-       COUNT(METADATA$FILE_ROW_NUMBER)-1 as number_of_rows
-FROM @data_dumps d
-WHERE EXISTS (--Subselect to filter keywords
-              SELECT $1 AS keyword
-              FROM @data_dumps k
-              WHERE METADATA$FILENAME = 'challenge_3/keywords.csv'
-              AND METADATA$FILE_ROW_NUMBER > 1
-              AND d.METADATA$FILENAME like '%'||$1||'%' 
+create table if not exists stage_table as 
+--retrieve file names and row count. deduct 1 for the header.
+select metadata$filename as filename, 
+       count(metadata$file_row_number)-1 as number_of_rows
+from @data_dumps d
+where exists (--subselect to filter keywords
+              select $1 as keyword
+                from @data_dumps k
+               where metadata$filename = 'challenge_3/keywords.csv'
+                 and metadata$file_row_number > 1
+                 and d.metadata$filename like '%'||$1||'%' 
              )
-GROUP BY filename;
+group by filename;
 
-SELECT *
-FROM stage_table;
+select *
+from stage_table;

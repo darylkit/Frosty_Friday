@@ -10,45 +10,45 @@
 */
 
 --Setup environment
-CREATE DATABASE IF NOT EXISTS frosty_friday;
-CREATE SCHEMA IF NOT EXISTS frosty;
-DROP SCHEMA IF EXISTS public;
+create database if not exists frosty_friday;
+create schema if not exists frosty;
+drop schema if exists public;
 
-CREATE OR REPLACE TABLE raw_source (
-  SRC VARIANT);
+create or replace table raw_source (
+  src variant);
   
---Load Raw data into a table
-COPY INTO raw_source
-FROM '@FROSTY_FRIDAY.FROSTY.INTERNAL_STAGE/Spanish_Monarchs.json'
-FILE_FORMAT = (TYPE = JSON);
+--load raw data into a table
+copy into raw_source
+from '@frosty_friday.frosty.internal_stage/spanish_monarchs.json'
+file_format = (type = json);
 
-SELECT * FROM raw_source;
+select * from raw_source;
 
-CREATE OR REPLACE TABLE spanish_monarchs AS
-SELECT ROW_NUMBER() OVER (ORDER BY monarchs.value:Birth::date) AS ID,
-       ROW_NUMBER() OVER (PARTITION BY houses.value:House ORDER BY monarchs.index) as INTER_HOUSE_ID,
-       src.value:Era::varchar as ERA,
-       houses.value:House::varchar as HOUSE,
-       monarchs.value:Name::varchar as NAME,
-       monarchs.value:Nickname[0]::varchar AS NICKNAME_1,
-       monarchs.value:Nickname[1]::varchar AS NICKNAME_2,
-       monarchs.value:Nickname[2]::varchar AS NICKNAME_3,
-       monarchs.value:Birth::date as BIRTH,
-       monarchs.value:"Place of Birth"::varchar AS PLACE_OF_BIRTH,
-       monarchs.value:"Start of Reign"::date AS START_OF_REIGN,
-       COALESCE(monarchs.value:"Consort\/Queen Consort"[0],monarchs.value:"Consort\/Queen Consort")::varchar AS QUEEN_OR_QUEEN_CONSORT_1,
-       monarchs.value:"Consort\/Queen Consort"[1]::varchar AS QUEEN_OR_QUEEN_CONSORT_2,
-       monarchs.value:"Consort\/Queen Consort"[2]::varchar AS QUEEN_OR_QUEEN_CONSORT_3,
-       monarchs.value:"End of Reign"::date AS END_OF_REIGN,
-       monarchs.value:Duration::varchar AS DURATION,
-       monarchs.value:Death::date AS DEATH,
-       TRIM(REPLACE(LOWER(monarchs.value:"Age at Time of Death"),'years',''))::int AS AGE_AT_THE_TIME_OF_DEATH_YEARS,
-       monarchs.value:"Place of Death"::varchar AS PLACE_OF_DEATH,
-       monarchs.value:"Burial Place"::varchar AS BURIAL_PLACE
-FROM raw_source,
-LATERAL FLATTEN( INPUT => src ) src,
-LATERAL FLATTEN( INPUT => src.value:Houses) houses,
-LATERAL FLATTEN( INPUT => houses.value:Monarchs) monarchs
-ORDER BY ID;
+create or replace table spanish_monarchs as
+ select row_number() over (order by monarchs.value:Birth::date) as ID,
+        row_number() over (partition by houses.value:House ORDER by monarchs.index) as INTER_HOUSE_ID,
+        src.value:Era::varchar as ERA,
+        houses.value:House::varchar as HOUSE,
+        monarchs.value:Name::varchar as NAME,
+        monarchs.value:Nickname[0]::varchar as NICKNAME_1,
+        monarchs.value:Nickname[1]::varchar as NICKNAME_2,
+        monarchs.value:Nickname[2]::varchar as NICKNAME_3,
+        monarchs.value:Birth::date as BIRTH,
+        monarchs.value:"Place of Birth"::varchar as PLACE_OF_BIRTH,
+        monarchs.value:"Start of Reign"::date as START_OF_REIGN,
+        coalesce(monarchs.value:"Consort\/Queen Consort"[0],monarchs.value:"Consort\/Queen Consort")::varchar as QUEEN_OR_QUEEN_CONSORT_1,
+        monarchs.value:"Consort\/Queen Consort"[1]::varchar as QUEEN_OR_QUEEN_CONSORT_2,
+        monarchs.value:"Consort\/Queen Consort"[2]::varchar as QUEEN_OR_QUEEN_CONSORT_3,
+        monarchs.value:"End of Reign"::date as END_OF_REIGN,
+        monarchs.value:Duration::varchar as DURATION,
+        monarchs.value:Death::date as DEATH,
+        trim(replace(lower(monarchs.value:"Age at Time of Death"),'years',''))::int as AGE_AT_THE_TIME_OF_DEATH_YEARS,
+        monarchs.value:"Place of Death"::varchar as PLACE_OF_DEATH,
+        monarchs.value:"Burial Place"::varchar as BURIAL_PLACE
+   from raw_source,
+lateral flatten( input => src ) src,
+lateral flatten( input => src.value:Houses) houses,
+lateral flatten( input => houses.value:Monarchs) monarchs
+  order by id;
 
-SELECT * FROM spanish_monarchs;
+select * from spanish_monarchs;
