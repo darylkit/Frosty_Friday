@@ -1,5 +1,20 @@
 /*
     https://frostyfriday.org/blog/2022/09/23/week-15-intermediate/
+    This week we’re working with small dataset about house sales that needs to be categorized according 
+    to certain sliding bins. The catch however , is that the sizes and the number of bins can change quickly.
+
+    The challenge is to create a function with a single name that does the following:
+
+    can handle uneven bin sizes
+    the first parameter must be the column that will inform your bins (in this example, we categorise 
+    according to [price])
+
+    the second parameter should specify the ranges of your bins (remember, these are uneven bins, 
+    bin 1 could be 1 – 400, and bin 2 401 – 708, while bin 3 is 709 – 3000) how you do this is up to you: 
+    you can specify lower bounds, upper bounds, both, count within each bin….
+    if using SQL, as a minimum, it should be able to handle 2-6 bins, if using other languages then you 
+    will find them flexible enough to allow you to do any number of bins
+
 
 */
 
