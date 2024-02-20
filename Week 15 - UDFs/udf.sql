@@ -33,7 +33,7 @@ insert into home_sales (sale_date, price) values
 ('2018-04-01'::date, 510000.00);
 
 --Create Function
-CREATE OR REPLACE FUNCTION get_bucket (price numeric(8,2), bin_ranges array)
+create or replace function get_bucket (price numeric(8,2), bin_ranges array)
 returns int
 language python
 runtime_version = '3.11'
@@ -50,21 +50,21 @@ def get_bucket(price, bin_ranges):
 $$;
 
 --Test Function
-SELECT sale_date,
+select sale_date,
        price,
        get_bucket(price,[[0,1]
                         ,[2,310000]
                         ,[310001,400000]
                         ,[400001,500000]
-                        ]) AS BUCKET_SET1,
+                        ]) as bucket_set1,
        get_bucket(price,[[0,1]
-                        ,[210001,350000]]) AS BUCKET_SET2,
+                        ,[210001,350000]]) as bucket_set2,
        get_bucket(price,[[0,250000]
                         ,[250001,290001]
                         ,[290002,320000]
                         ,[320001,360000]
                         ,[360001,410000]
                         ,[410001,470001]
-                        ]) AS BUCKET_SET3
+                        ]) as bucket_set3
  from home_sales
 order by sale_date;
