@@ -1,0 +1,233 @@
+[
+  {
+    "license": {
+      "name": "CC BY-SA 3.0",
+      "url": "https://creativecommons.org/licenses/by-sa/3.0"
+    },
+    "meanings": [
+      {
+        "antonyms": [],
+        "definitions": [
+          {
+            "antonyms": [],
+            "definition": "The act of returning.",
+            "example": "I expect the house to be spotless upon my return.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "A return ticket.",
+            "example": "Do you want a one-way or a return?",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "An item that is returned, e.g. due to a defect, or the act of returning it.",
+            "example": "Last year there were 250 returns of this product, an improvement on the 500 returns the year before.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "An answer.",
+            "example": "a return to one's question",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "An account, or formal report, of an action performed, of a duty discharged, of facts or statistics, etc.; especially, in the plural, a set of tabulated statistics prepared for general information.",
+            "example": "election returns; a return of the amount of goods produced or sold",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "Gain or loss from an investment.",
+            "example": "It yielded a return of 5%.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": ": A report of income submitted to a government for purposes of specifying exact tax payment amounts. A tax return.",
+            "example": "Hand in your return by the end of the tax year.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "A carriage return character.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "The act of relinquishing control to the calling procedure.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "A return value: the data passed back from a called procedure.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "A return pipe, returning fluid to a boiler or other central plant (compare with flow pipe, which carries liquid away from central plant).",
+            "example": "The boiler technician had to cut out the heating return to access the safety valve.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "A short perpendicular extension of a desk, usually slightly lower.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "Catching a ball after a punt and running it back towards the opposing team.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "A throw from a fielder to the wicket-keeper or to another fielder at the wicket.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "The continuation in a different direction, most often at a right angle, of a building, face of a building, or any member, such as a moulding; applied to the shorter in contradistinction to the longer.",
+            "example": "A facade of sixty feet east and west has a return of twenty feet north and south.",
+            "synonyms": []
+          }
+        ],
+        "partOfSpeech": "noun",
+        "synonyms": [
+          "gaincoming"
+        ]
+      },
+      {
+        "antonyms": [],
+        "definitions": [
+          {
+            "antonyms": [],
+            "definition": "To come or go back (to a place or person).",
+            "example": "Although the birds fly north for the summer, they return here in winter.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To go back in thought, narration, or argument.",
+            "example": "To return to my story [...]",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To turn back, retreat.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To turn (something) round.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To place or put back something where it had been.",
+            "example": "Please return your hands to your lap.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To give something back to its original holder or owner.",
+            "example": "You should return the library book within one month.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To take back something to a vendor for a refund.",
+            "example": "If the goods don't work, you can return them.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To give in requital or recompense; to requite.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To bat the ball back over the net in response to a serve.",
+            "example": "The player couldn't return the serve because it was so fast.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To play a card as a result of another player's lead.",
+            "example": "If one players plays a trump, the others must return a trump.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To throw a ball back to the wicket-keeper (or a fielder at that position) from somewhere in the field.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To say in reply; to respond.",
+            "example": "to return an answer;  to return thanks;  \"Do it yourself!\" she returned.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To relinquish control to the calling procedure.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To pass (data) back to the calling procedure.",
+            "example": "This function returns the number of files in the directory.",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To retort; to throw back.",
+            "example": "to return the lie",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "To report, or bring back and make known.",
+            "example": "to return the result of an election",
+            "synonyms": []
+          },
+          {
+            "antonyms": [],
+            "definition": "(by extension) To elect according to the official report of the election officers.",
+            "synonyms": []
+          }
+        ],
+        "partOfSpeech": "verb",
+        "synonyms": []
+      }
+    ],
+    "phonetics": [
+      {
+        "audio": "https://api.dictionaryapi.dev/media/pronunciations/en/return-au.mp3",
+        "license": {
+          "name": "BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0"
+        },
+        "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=75899733"
+      },
+      {
+        "audio": "",
+        "text": "/ɹɪˈtɜːn/"
+      },
+      {
+        "audio": "https://api.dictionaryapi.dev/media/pronunciations/en/return-us.mp3",
+        "license": {
+          "name": "BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0"
+        },
+        "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=1446718",
+        "text": "/ɹɪˈtɝn/"
+      }
+    ],
+    "sourceUrls": [
+      "https://en.wiktionary.org/wiki/return"
+    ],
+    "word": "return"
+  }
+]
