@@ -19,18 +19,16 @@ select dateadd(day, (row_number() over(order by seq4())) - 1, date('2020-01-01')
 
 
 --Create Function
-create or replace function calculate_business_days (start_date date, end_date date, including boolean)
-returns int
-language python
-runtime_version = '3.11'
-handler='calculate_business_days'
-as
-$$
-def calculate_business_days(start_date, end_date, including):
-    difference = end_date - start_date;
-    return difference.days + int(including)
-$$;
-
+create function calculate_business_days (start_date date, end_date date, including boolean)
+  returns int
+  as
+  $$
+    select count(*) + including::int
+      from date_dimension
+     where date between start_date and end_date 
+       and day_of_week not in (6,7)
+  $$
+  ;
 --Test
 create or replace table testing_data (
        id int,
